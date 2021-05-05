@@ -3,12 +3,17 @@ const fs = require('fs');
 const { SERVICIOS } = require('../config');
 const { healthCheck } = require('../middleware.js');
 const { actualizarUbicaciones } = require('./actualizarUbicaciones');
+const lineas = require('./lineas.db.json')
 
 const LINEAS = SERVICIOS.lineas;
 
 const lineasDb = {
-    buscarPorLinea(linea, callback) {
-        // Implementar
+    // TODO callback sospechoso
+    // buscarEstadoPorLinea(linea, callback) {
+    //     return lineas[linea].funciona
+    // },
+    buscarInformacionDeLinea(linea) {
+        return lineas[linea];
     }
 };
 
@@ -18,11 +23,11 @@ app.use(healthCheck);
 
 app.get('/lineas/:linea', (req, res) => {
     const linea = req.params.linea;
-    // const estadoLinea = lineasDb.buscarPorLinea(linea);    ¿Cómo seguimos?
-    if (estadoLinea === undefined) {
+    const informacionLinea = lineasDb.buscarInformacionDeLinea(linea);
+    if (!informacionLinea.funciona) {
         res.sendStatus(404);
     } else {
-        res.json(estadoLinea);
+        res.json(informacionLinea);
     }
 });
 
